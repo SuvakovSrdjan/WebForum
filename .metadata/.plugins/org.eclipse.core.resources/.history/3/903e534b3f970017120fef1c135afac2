@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>A new plight for otaku</title>
+<link rel="stylesheet" type="text/css" href="WEB-SRC/StyleSettings.css">
+</head>
+<body>
+<h1>CREATE A NEW TOPIC</h1>
+
+	<form style="padding-left: 260px" name="forumForm" method="post" action="AddTopicServlet">
+		<table>
+			<tr>
+				<td>Topic Name:</td>
+				<td><input type="text" name="topicName"></td>
+			</tr>
+			<tr>
+				<td>Topic Content:</td>
+				<td><input height="30px" type="text" name="topicContent"></td>
+			</tr>
+			<tr>
+				<td>Topic:</td>
+				<td><input type="text" placeholder="type in url if the topic is an image or a site" name="icoUrl"></td>
+			</tr>
+			<tr>
+				<td>Rules:</td>
+				<td><input type="text" placeholder="separate rules with ;" name="ruleList"></td>
+			</tr>
+			<tr>
+				<td>Moderator:</td>
+				<td><input type="text" name="modInChief"></td>
+			</tr>
+			<tr>
+				<td>Additional Moderators:</td>
+				<td><input type="text" placeholder="Separate mods with ; " name="plebMods"></td>
+			</tr>
+			<tr>
+				<td colspan='2'><input type="submit" name="AddSubforum" value="Add Forum">
+				<input type="submit" name="Cancel" value="Cancel">
+			</tr>
+		</table>
+</form>
+
+</body>
+</html>

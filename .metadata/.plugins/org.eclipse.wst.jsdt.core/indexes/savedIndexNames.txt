@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+/home/airjetsrka/eclipse-workspace/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+1286063318.index
+2499723252.index
+1073085964.index
+727960794.index
+4026388253.index
+195845263.index
+1132756955.index

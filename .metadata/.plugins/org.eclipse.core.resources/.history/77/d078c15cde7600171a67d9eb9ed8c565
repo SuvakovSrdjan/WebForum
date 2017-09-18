@@ -1,0 +1,13 @@
+package classesPackage;
+
+import java.util.Map;
+
+public class Comment {
+	String parentTopicName;
+	String author;
+	String dateCreated;
+	String parentComment;
+	String commentContent;
+	Map<String,Boolean> commentLikesMap;
+	Boolean commentEdited;
+}

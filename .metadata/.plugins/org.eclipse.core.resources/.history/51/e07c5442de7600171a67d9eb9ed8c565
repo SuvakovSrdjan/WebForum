@@ -1,0 +1,17 @@
+package classesPackage;
+
+import java.util.ArrayList;
+
+public class User {
+	
+	String username;
+	String password;
+	String firstname;
+	String surname;
+	String accountType;
+	String phoneNumber;
+	String dateOfRegistry;
+	ArrayList<String> subscribedSubforumNames;
+	ArrayList<Integer> savedTopicIds;
+	ArrayList<Integer> savedComentIds;
+}

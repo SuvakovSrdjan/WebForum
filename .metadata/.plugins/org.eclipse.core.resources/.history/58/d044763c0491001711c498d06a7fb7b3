@@ -1,0 +1,109 @@
+package mainPage;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import classesPackage.Data;
+import classesPackage.Subforum;
+import classesPackage.User;
+
+/**
+ * Servlet implementation class AddForumServlet
+ */
+public class AddForumServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private String redirect = new String("AddSubforum.jsp");
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddForumServlet() {
+        super();
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendRedirect(redirect);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("AddSubforum") != null) {
+			Data allData = Data.readData();
+			Boolean boo = false;
+			if(request.getParameter("forumName") == null || request.getParameter("forumName") == ""){
+				boo=true;
+			}
+			
+			for(User tmp: allData.getUsers()) {
+				if(tmp.getUsername().equals(request.getParameter("forumName"))) {
+					boo = true;
+				}
+		}
+			
+			if(!boo) {
+				Subforum newSubforum = new Subforum();
+				
+				
+				//Name, Chief Mod, Description and Icon URL!
+				newSubforum.setName(request.getParameter("forumName"));
+				newSubforum.setModeratorInChief(request.getParameter("ModInChief"));
+				newSubforum.setDescription(request.getParameter("forumDescription"));
+				newSubforum.setIconURL(request.getParameter("icoUrl"));
+				
+				
+				//Split PlebMods string and add one by one into a list, then set the list into the newSubforum object
+				String allPlebModerators = request.getParameter("plebMods");
+				String[] separatePlebModerators = allPlebModerators.split(";"); 
+				ArrayList<String> plebModsForList = new ArrayList<String>();
+				for (String string : separatePlebModerators) {
+					System.out.println(string);
+					plebModsForList.add(string);
+				}
+				newSubforum.setPlebModerators(plebModsForList);
+				 
+				
+				//Same thing as pleb moderators but for Rules instead!
+				String ruleList = request.getParameter("ruleList");
+				String[] separateRules = ruleList.split(";"); 
+				ArrayList<String> rulesForList = new ArrayList<String>();
+				for (String string : separateRules) {
+					System.out.println(string);
+					rulesForList.add(string);
+				}
+				newSubforum.setRules(rulesForList);
+				 	
+				
+				
+				
+				//Write to file
+				ArrayList<Subforum> subforumList = (ArrayList<Subforum>) allData.getSubforums();
+				subforumList.add(newSubforum);
+				System.out.println("DEBUG");
+				allData.setSubforums(subforumList);
+				Data.writeData(allData);
+				redirect="MainPageStuff";
+				
+			}
+	}
+		
+		if(request.getParameter("cancel") != null) {
+			redirect = "MainPageStuff";
+		}
+	
+	doGet(request,response);
+	}
+
+}

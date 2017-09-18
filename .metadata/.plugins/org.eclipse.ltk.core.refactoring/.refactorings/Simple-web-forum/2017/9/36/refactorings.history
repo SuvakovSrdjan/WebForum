@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;StyleSettings.css&apos; to &apos;WEB-SRC&apos;&#x0A;- Original project: &apos;Simple-web-forum&apos;&#x0A;- Destination element: &apos;WEB-SRC&apos;&#x0A;- Original element: &apos;StyleSettings.css&apos;" description="Copy file" element1="WebContent/WEB-SRC/StyleSettings.css" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1504400357173" target="/Simple-web-forum/WebContent/WEB-SRC" units="0" version="1.0"/>
+</session>

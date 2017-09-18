@@ -1,0 +1,16 @@
+package classesPackage;
+
+public class Topic {
+	String name;
+	String parentSubforum;
+	String topicType;
+	String imageLink;
+	String link;
+	String author;
+	String content;
+	String dateCreated;
+	List<Integer> commentIds;
+	
+	
+
+}

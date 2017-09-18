@@ -1,0 +1,14 @@
+127.0.0.1 - - [22/Aug/2017:16:06:02 +0200] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:03 +0200] "GET /Simple-web-forum/WEB-SRC/StyleSettings.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:03 +0200] "GET /Simple-web-forum/Subforums.jsp HTTP/1.1" 200 1738
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:13 +0200] "GET /Simple-web-forum/Subforums.jsp HTTP/1.1" 200 1738
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:13 +0200] "GET /Simple-web-forum/WEB-SRC/StyleSettings.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:14 +0200] "GET /favicon.ico HTTP/1.1" 404 1016
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:14 +0200] "GET /favicon.ico HTTP/1.1" 404 1016
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:28 +0200] "GET /Simple-web-forum/RegisterServlet HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:28 +0200] "GET /Simple-web-forum/UserRegistration.jsp HTTP/1.1" 200 2023
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:34 +0200] "POST /Simple-web-forum/addUser HTTP/1.1" 404 1042
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:39 +0200] "GET /Simple-web-forum/LoginServlet HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:39 +0200] "GET /Simple-web-forum/Login.jsp HTTP/1.1" 200 810
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:40 +0200] "POST /Simple-web-forum/MainPageStuff HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [22/Aug/2017:16:06:40 +0200] "GET /Simple-web-forum/Subforums.jsp HTTP/1.1" 200 1738

@@ -1,0 +1,154 @@
+package mainPage;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import classesPackage.Data;
+import classesPackage.Subforum;
+import classesPackage.Topic;
+import classesPackage.User;
+
+/**
+ * Servlet implementation class SpecificSubforumServlet
+ */
+public class SpecificSubforumServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	String redirect = "SpecificSubforum.jsp";
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SpecificSubforumServlet() {
+        super();
+        
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Data allData = Data.readData();
+		List<Topic> topicsToDisplay= new ArrayList<Topic>();
+		List<Integer>likesList = new ArrayList<Integer>();
+		List<Integer>disLikesList = new ArrayList<Integer>();
+		String forum=request.getParameter("subforum");
+		if(forum == null) {
+			Subforum forumInSession = (Subforum) request.getAttribute("CurrentForum");
+			if(forumInSession != null) {
+				forum = forumInSession.getName();
+			}
+		}
+		HttpSession session = request.getSession();
+		int likes = 0 , dislikes = 0;
+		for(Subforum tmp : allData.getSubforums()) {
+			if(tmp.getName().equals(forum)) {
+				session.setAttribute("CurrentForum",tmp);
+			}
+		}
+		
+		for(Topic tmp: allData.getTopics()) {
+			if(tmp.getParentSubforum().equals(forum)) {
+				topicsToDisplay.add(tmp);
+				for(Map.Entry<String,Boolean> temp : tmp.getLikesMap().entrySet()) {
+					if(temp.getValue() == true) {
+						likes++;
+					}else if(temp.getValue() == false) {
+						dislikes++;
+					}
+				}
+				likesList.add(likes);
+				disLikesList.add(dislikes);
+				likes =0; dislikes = 0;
+			}
+		}
+		
+		session.setAttribute("displayTopics",topicsToDisplay);
+		session.setAttribute("likes",likesList);
+		session.setAttribute("dislikes",disLikesList);
+		response.sendRedirect(redirect);
+		redirect="SpecificSubforum.jsp";
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		Data allData = Data.readData();
+		if(request.getParameter("follow") != null) {
+			User loggedUser = (User) session.getAttribute("user");
+			Subforum dispSubforum = (Subforum) session.getAttribute("CurrentForum");
+			int i = 0;
+			List<User> userList = allData.getUsers();
+			if(loggedUser.getSubscribedSubforumNames() != null) {
+				if(!(loggedUser.getSubscribedSubforumNames().contains(dispSubforum.getName()))) {
+					ArrayList<String> savedSubforumNames = loggedUser.getSubscribedSubforumNames();
+					savedSubforumNames.add(dispSubforum.getName());
+					loggedUser.setSubscribedSubforumNames(savedSubforumNames);
+				}
+			}else {
+				ArrayList<String> savedSubforumNames = new ArrayList<String>();
+				savedSubforumNames.add(dispSubforum.getName());
+				loggedUser.setSubscribedSubforumNames(savedSubforumNames);
+			}
+			for(User tmp: userList) {
+				if(tmp.getUsername().equals(loggedUser.getUsername())) {
+					userList.set(i, loggedUser);
+				}
+				i++;
+			}
+			allData.setUsers(userList);
+			Data.writeData(allData);
+			redirect = "SpecificSubforum.jsp";
+			
+		}
+		if(request.getParameter("delete") != null) {
+			User loggedUser =(User) session.getAttribute("user");
+			Subforum currentSubforum = (Subforum) session.getAttribute("CurrentForum");
+			Topic currentTopic = (Topic) session.getAttribute("topic");
+			List<Topic> allTopics = allData.getTopics();
+			int i = 0;
+			int j = 0;
+			Boolean allowedToDelete = false;
+			for(String tmp : currentSubforum.getPlebModerators()) {
+				if(loggedUser.getUsername().equals(tmp)) {
+					allowedToDelete = true;
+				}
+			}
+			if(loggedUser.getUsername().equals(currentSubforum.getModeratorInChief())) {
+				allowedToDelete = true;
+			}
+			
+			if(loggedUser.getUsername().equals(currentTopic.getAuthor())) {
+				allowedToDelete = true;
+			}
+			if(loggedUser.getAccountType().equals("ADMIN")) {
+				allowedToDelete = true;
+			}
+			if(allowedToDelete) {
+				for(Topic tmp : allData.getTopics()) {
+					if(tmp.getId()==currentTopic.getId()) {
+						j=i;
+					}
+					i++;
+				}
+				allTopics.remove(j);
+				allData.setTopics(allTopics);
+				Data.writeData(allData);
+				redirect = "SpecificSubforumServlet?subforum="+ currentSubforum.getName();
+			}
+		}
+		
+		doGet(request, response);
+	}
+
+}

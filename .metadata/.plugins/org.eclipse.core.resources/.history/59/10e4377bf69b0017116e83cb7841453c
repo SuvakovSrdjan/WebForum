@@ -1,0 +1,102 @@
+package mainPage;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import classesPackage.Comment;
+import classesPackage.Data;
+import classesPackage.Topic;
+
+/**
+ * Servlet implementation class InfiniteCommentServlet
+ */
+public class InfiniteCommentServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	 String redirect = "TopicView.jsp";
+	 Boolean comesFromPost = false;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public InfiniteCommentServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		int clickedComment = -1;
+		List<Integer>commentLikesList = new ArrayList<Integer>();
+		List<Integer>commentDisLikesList = new ArrayList<Integer>();
+		HttpSession session = request.getSession();
+		if(!comesFromPost) {
+		clickedComment = Integer.parseInt(request.getParameter("comment"));
+		} else {
+			Comment dispComment = (Comment) session.getAttribute("pinnedComment");
+			clickedComment = dispComment.getId();
+		}
+		Data allData = Data.readData();
+		Comment pinnedComment = new Comment();
+		
+		int likes = 0, dislikes = 0, commentLikes = 0, commentDislikes = 0;
+		List<Comment> commentsToDisplay = new ArrayList<Comment>();
+		for(Comment tmp : allData.getComments()) {
+			if(tmp.getId() == clickedComment) {
+				pinnedComment = tmp;
+				for(Comment temp : allData.getComments()) {
+					if(temp.getParentComment() == pinnedComment.getId()) {
+							commentsToDisplay.add(temp);
+							for(Map.Entry<String,Boolean> temporary : temp.getCommentLikesMap().entrySet()) {
+								if(temporary.getValue() == true) {
+									commentLikes++;
+								}else if(temporary.getValue() == false) {
+									commentDislikes++;
+								}
+						}
+							commentLikesList.add(commentLikes);
+							commentDisLikesList.add(commentDislikes);
+						
+					}
+				
+				
+				for(Map.Entry<String,Boolean> temporary : tmp.getCommentLikesMap().entrySet()) {
+					if(temporary.getValue() == true) {
+						likes++;
+					}else if(temporary.getValue() == false) {
+						dislikes++;
+					}
+				}
+			}
+		}
+		}
+		session.setAttribute("pinnedComment", pinnedComment);
+		session.setAttribute("pinnedCommentLikes",likes);
+		session.setAttribute("pinnedCommentDislikes",dislikes);
+		session.setAttribute("commentLikes",commentLikesList);
+		session.setAttribute("commentDislikes",commentDisLikesList);
+		session.setAttribute("commentsToDisplay", commentsToDisplay);
+		response.sendRedirect(redirect);
+		comesFromPost = false;
+		redirect = "InfiniteComment.jsp";
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

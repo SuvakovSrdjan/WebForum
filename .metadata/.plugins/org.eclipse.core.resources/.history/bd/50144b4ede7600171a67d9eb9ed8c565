@@ -1,0 +1,13 @@
+package classesPackage;
+
+import java.util.ArrayList;
+
+public class Subforum {
+	
+	String name;
+	String description;
+	String iconURL;
+	ArrayList<String> rules;
+	String moderatorInChief;
+	ArrayList<String> plebModerators;
+}

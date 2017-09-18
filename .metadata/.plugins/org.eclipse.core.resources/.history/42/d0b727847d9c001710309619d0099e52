@@ -1,0 +1,118 @@
+package mainPage;
+
+import java.util.List;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import classesPackage.Data;
+import classesPackage.Topic;
+import classesPackage.User;
+import classesPackage.Subforum;
+
+/**
+ * Servlet implementation class AddTopicServlet
+ */
+public class AddTopicServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	String redirect = "AddTopic.jsp";
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddTopicServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.sendRedirect(redirect);
+		redirect="AddTopic.jsp";
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		if(request.getParameter("addTopic") != null) {
+			Data allData = Data.readData();
+			HttpSession session = request.getSession();
+			Topic newTopic = new Topic();
+			boolean boo = false;
+			String topicName = request.getParameter("topicName");
+			
+			String topicContent = request.getParameter("topicContent");
+			String topicTypeString = request.getParameter("topicType");
+			int topicTypeId = Integer.parseInt(topicTypeString);
+			String topicType = new String();
+			switch(topicTypeId){
+			case 0: topicType = "LINK"; break;
+			case 1: topicType = "IMAGE"; break;
+			case 2: topicType = "TEXT"; break;
+			} 
+			String topic = request.getParameter("topicUrl");
+			Subforum parentSubforum = (Subforum) session.getAttribute("CurrentForum");
+			User currentUser=(User) session.getAttribute("user");
+			int id = allData.getTopics().size() +1;
+			
+			Calendar cal = new GregorianCalendar();
+			SimpleDateFormat sp = new SimpleDateFormat("dd/MM/YYYY");
+			String dateOfCreation= sp.format(cal.getTime());
+			
+			newTopic.setDateCreated(dateOfCreation);
+			newTopic.setAuthor(currentUser.getUsername());
+			newTopic.setCommentIds(new ArrayList<Integer>());
+			newTopic.setContent(topicContent);
+			newTopic.setId(id);
+			newTopic.setImageLink(topic);
+			newTopic.setLikesMap(Collections.<String,Boolean>emptyMap());
+			newTopic.setParentSubforum(parentSubforum.getName());
+			newTopic.setTopicType(topicType);
+			newTopic.setName(topicName);
+			
+			for(Topic tmp : allData.getTopics()) {
+				if(tmp.getParentSubforum().equals(parentSubforum.getName())) {
+					if(tmp.getName().equals(topicName)) {
+						boo=true;
+					}
+				}
+			}
+			
+			if(!boo) {
+				List<Topic> topics = allData.getTopics();
+				if(topics == null) {
+					topics = new ArrayList<Topic>();
+				}
+				topics.add(newTopic);
+				allData.setTopics(topics);
+				Data.writeData(allData);
+				redirect = "SpecificSubforumServlet";
+			}
+		}
+		
+		if(request.getParameter("cancel") != null) {
+			redirect = "SpecificSubforumServlet";
+		}
+		
+		doGet(request, response);
+	}
+
+}

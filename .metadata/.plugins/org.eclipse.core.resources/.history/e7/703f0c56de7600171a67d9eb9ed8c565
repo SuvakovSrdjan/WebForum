@@ -1,0 +1,17 @@
+package classesPackage;
+
+import java.util.List;
+import java.util.Map;
+
+public class Topic {
+	String name;
+	String parentSubforum;
+	String topicType;
+	String imageLink;
+	String link;
+	String author;
+	String content;
+	String dateCreated;
+	List<Integer> commentIds;
+	Map<String, Boolean> likesMap; // <["pera"] , true = like, false  = dislike>
+}

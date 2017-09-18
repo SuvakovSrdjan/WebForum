@@ -1,0 +1,5 @@
+127.0.0.1 - - [03/Aug/2017:17:46:57 +0200] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [03/Aug/2017:17:47:01 +0200] "GET /Simple-web-forum/WEB-SRC/MainPage.html HTTP/1.1" 200 415
+0:0:0:0:0:0:0:1 - - [03/Aug/2017:17:47:21 +0200] "GET /Simple-web-forum/WEB-SRC/MainPage.html HTTP/1.1" 200 416
+0:0:0:0:0:0:0:1 - - [03/Aug/2017:17:54:28 +0200] "GET /Simple-web-forum/WEB-SRC/MainPage.html HTTP/1.1" 200 220
+0:0:0:0:0:0:0:1 - - [03/Aug/2017:17:54:52 +0200] "GET /Simple-web-forum/WEB-SRC/MainPage.html HTTP/1.1" 200 220

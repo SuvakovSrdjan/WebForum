@@ -1,0 +1,11 @@
+package classesPackage;
+
+public class Message {
+	String sender;
+	String reciever;
+	String messageContent;
+	Boolean messageRead;
+	
+	
+	
+}
