@@ -61,6 +61,7 @@ public class EditCommentServlet extends HttpServlet {
 			int i=0,j=0;
 			commentToEdit = (Comment) session.getAttribute("commentToEdit");
 			commentToEdit.setCommentContent(request.getParameter("commentText"));
+			commentToEdit.setCommentEdited(true);
 			for(Comment tmp: allData.getComments()) {
 				if(tmp.getId() == commentToEdit.getId()) {
 					j=i;

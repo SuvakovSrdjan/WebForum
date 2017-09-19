@@ -178,6 +178,7 @@ public class AddTopicServlet extends HttpServlet {
 					for(Topic tmp : allData.getTopics()) {
 						if(tmp.getName().equals(topicName)) {
 							j=i;
+							
 						}
 						i++;
 					}

@@ -1,0 +1,200 @@
+package mainPage;
+
+import java.util.List;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import classesPackage.Data;
+import classesPackage.Topic;
+import classesPackage.User;
+import classesPackage.Subforum;
+
+/**
+ * Servlet implementation class AddTopicServlet
+ */
+public class AddTopicServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	String redirect = "AddTopic.jsp";
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddTopicServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String action = "Add Topic";
+		HttpSession session = request.getSession();
+		session.setAttribute("CurrentTopic", null);
+		session.setAttribute("topicTypeSelected", null);
+		
+		if(request.getParameter("topic") != null) {
+			
+			action = request.getParameter("action");
+			Data allData = Data.readData();
+			String editTopicIdString = request.getParameter("topic");
+			Integer editTopicId = Integer.parseInt(editTopicIdString);
+			Topic editTopic = new Topic();
+			for(Topic tmp: allData.getTopics()) {
+				if(tmp.getId()==editTopicId) {
+					editTopic = tmp;
+				}
+			}
+			String topicType = new String();
+			if(editTopic.getTopicType().equals("LINK"))
+				topicType="0";
+			if(editTopic.getTopicType().equals("IMAGE"))
+				topicType="1";
+			if(editTopic.getTopicType().equals("TEXT"))
+				topicType="2";
+			session.setAttribute("CurrentTopic", editTopic);
+			session.setAttribute("topicTypeSelected", topicType);
+			
+		}
+		session.setAttribute("action", action);
+		response.sendRedirect(redirect);
+		redirect="AddTopic.jsp";
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Data allData = Data.readData();
+		HttpSession session = request.getSession();
+		Subforum parentSubforum = (Subforum) session.getAttribute("CurrentForum");
+		if(request.getParameter("addTopic") != null) {
+			if(request.getParameter("addTopic").equals("Add Topic")) {
+			
+			Topic newTopic = new Topic();
+			boolean boo = false;
+			String topicName = request.getParameter("topicName");
+			
+			String topicContent = request.getParameter("topicContent");
+			String topicTypeString = request.getParameter("topicType");
+			int topicTypeId = Integer.parseInt(topicTypeString);
+			String topicType = new String();
+			switch(topicTypeId){
+			case 0: topicType = "LINK"; break;
+			case 1: topicType = "IMAGE"; break;
+			case 2: topicType = "TEXT"; break;
+			default: topicType = "TEXT"; break;
+			} 
+			String topic = request.getParameter("topicUrl");
+			
+			User currentUser=(User) session.getAttribute("user");
+			int id = 0;
+			Topic lastTopic = new Topic();
+			List<Topic> allTopics =allData.getTopics();
+			if(allTopics.size() > 0) {
+				lastTopic = allTopics.get(allTopics.size() - 1);
+				if(lastTopic != null) {
+					id = lastTopic.getId() +1;
+				}
+			}else {
+				id = 0;
+			}
+			
+			Calendar cal = new GregorianCalendar();
+			SimpleDateFormat sp = new SimpleDateFormat("dd/MM/YYYY");
+			String dateOfCreation= sp.format(cal.getTime());
+			
+			newTopic.setDateCreated(dateOfCreation);
+			newTopic.setAuthor(currentUser.getUsername());
+			newTopic.setCommentIds(new ArrayList<Integer>());
+			newTopic.setContent(topicContent);
+			newTopic.setId(id);
+			newTopic.setImageLink(topic);
+			newTopic.setLikesMap(Collections.<String,Boolean>emptyMap());
+			newTopic.setParentSubforum(parentSubforum.getName());
+			newTopic.setTopicType(topicType);
+			newTopic.setName(topicName);
+			
+			for(Topic tmp : allData.getTopics()) {
+				if(tmp.getParentSubforum().equals(parentSubforum.getName())) {
+					if(tmp.getName().equals(topicName)) {
+						boo=true;
+					}
+				}
+			}
+			
+			if(!boo) {
+				List<Topic> topics = allData.getTopics();
+				if(topics == null) {
+					topics = new ArrayList<Topic>();
+				}
+				topics.add(newTopic);
+				allData.setTopics(topics);
+				Data.writeData(allData);
+				redirect = "SpecificSubforumServlet?suborum="+ parentSubforum.getName();
+			}
+		}
+			if(request.getParameter("addTopic").equals("Edit")) {
+				Topic newTopic = (Topic) session.getAttribute("CurrentTopic");
+				boolean boo = false;
+				String topicName = request.getParameter("topicName");
+				
+				String topicContent = request.getParameter("topicContent");
+				String topicTypeString = request.getParameter("topicType");
+				int topicTypeId = Integer.parseInt(topicTypeString);
+				String topicType = new String();
+				switch(topicTypeId){
+				case 0: topicType = "LINK"; break;
+				case 1: topicType = "IMAGE"; break;
+				case 2: topicType = "TEXT"; break;
+				} 
+				String topic = request.getParameter("topicUrl");
+				
+				
+				
+				
+				newTopic.setContent(topicContent);
+				newTopic.setImageLink(topic);
+				newTopic.setTopicType(topicType);				
+				
+				
+					int i =0, j = 0;
+					System.out.println(topicName);
+					List<Topic> topics = allData.getTopics();
+					for(Topic tmp : allData.getTopics()) {
+						if(tmp.getName().equals(topicName)) {
+							j=i;
+							System.out.println(j);
+						}
+						i++;
+					}
+					topics.set(j, newTopic);
+					allData.setTopics(topics);
+					Data.writeData(allData);
+					redirect = "SpecificSubforumServlet?suborum="+ parentSubforum.getName();				
+			}
+		}
+		
+		if(request.getParameter("cancel") != null) {
+			redirect = "SpecificSubforumServlet?suborum="+ parentSubforum.getName();
+		}
+		
+		doGet(request, response);
+	}
+
+}

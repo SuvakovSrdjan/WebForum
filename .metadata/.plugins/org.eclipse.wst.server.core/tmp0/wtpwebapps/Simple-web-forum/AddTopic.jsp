@@ -16,7 +16,7 @@
 			<tr>
 				<td>Topic Name:</td>
 				<c:if test="${action eq 'Edit' }">
-					<td><input type="text" readonly="readonly" value="${CurrentTopic.name} " name="topicName"></td>
+					<td><input type="text" readonly="readonly" value="${CurrentTopic.name}" name="topicName"></td>
 				</c:if>
 				<c:if test="${action eq 'Add Topic' }">
 					<td><input type="text" name="topicName"></td>
@@ -24,11 +24,11 @@
 			</tr>
 			<tr>
 				<td>Topic Content:</td>
-				<td><input height="30px" type="text" value="${CurrentTopic.content }" name="topicContent"></td>
+				<td><input height="30px" type="text" value="${CurrentTopic.content}" name="topicContent"></td>
 			</tr>
 			<tr>
 				<td>Topic Type:</td>
-				<td><select name="topicType" value="${CurrentTopic.topicType }">
+				<td><select name="topicType" value="${CurrentTopic.topicType}">
 						<option value="${topicTypeSelected}" selected='selected'>${CurrentTopic.topicType}</option>
 						<option value="0">LINK</option>
 						<option value="1">IMAGE</option>
@@ -37,7 +37,7 @@
 			</tr>
 			<tr>
 				<td>Topic:</td>
-				<td><input type="text" value="${CurrentTopic.imageLink }" placeholder="type in url if the topic is an image or a site" name="topicUrl"></td>
+				<td><input type="text" value="${CurrentTopic.imageLink}" placeholder="type in url if the topic is an image or a site" name="topicUrl"></td>
 			</tr>
 			<tr>
 				<td colspan='2'><input type="submit" name="addTopic" value="${action }">

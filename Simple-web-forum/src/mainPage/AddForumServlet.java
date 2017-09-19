@@ -69,8 +69,8 @@ public class AddForumServlet extends HttpServlet {
 				boo=true;
 			}
 			
-			for(User tmp: allData.getUsers()) {
-				if(tmp.getUsername().equals(request.getParameter("forumName"))) {
+			for(Subforum tmp: allData.getSubforums()) {
+				if(tmp.getName().equals(request.getParameter("forumName"))) {
 					boo = true;
 				}
 		}
